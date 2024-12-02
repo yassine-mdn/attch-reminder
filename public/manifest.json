@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "Gmail Attachment Reminder Extensions",
+  "description": "Click-Clack",
+  "version": "1.0",
+  "action": {
+  },
+  "permissions": ["storage", "declarativeContent", "activeTab", "scripting"],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
