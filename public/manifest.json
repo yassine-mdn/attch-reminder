@@ -8,5 +8,18 @@
   "permissions": ["storage", "declarativeContent", "activeTab", "scripting"],
   "background": {
     "service_worker": "background.js"
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://mail.google.com/*"
+      ],
+      "js": [
+        "contentScript.js"
+      ]
+    }
+  ],
+  "host_permissions": [
+    "https://*.google.com/*"
+  ]
 }
