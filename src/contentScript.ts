@@ -1,5 +1,48 @@
 console.log("Content script loaded!");
 
+
+/*let cachedContainers: NodeListOf<Element> | null = null;
+let lastCheckTime = 0;
+const CACHE_DURATION = 500;
+
+
+const getEmailContainerElements = (): NodeListOf<Element> => {
+    const currentTime = Date.now();
+
+    if (cachedContainers &&
+        (currentTime - lastCheckTime) < CACHE_DURATION) {
+        return cachedContainers;
+    }
+
+    const selector = "div[aria-label='New Message']";
+    cachedContainers = document.querySelectorAll(selector);
+    lastCheckTime = currentTime;
+
+    return cachedContainers;
+}*/
+
+
+//still super slow
+const setupNewMessageObserver = () => {
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach(mutation => {
+            mutation.addedNodes.forEach(node => {
+                if (node instanceof Element &&
+                    node.querySelector("div[aria-label='New Message']")) {
+                    console.log("Message Container Found!")
+                    document.addEventListener("input", inputListener(node));
+                }
+            });
+        });
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+    });
+};
+
 const getEmailBodyText = (element: Element): string => {
 
     let emailText = element.innerHTML;
@@ -7,34 +50,51 @@ const getEmailBodyText = (element: Element): string => {
     return emailText;
 }
 
-const getEmailBodyElement = (): Element | null => {
+const getEmailBodyElement = (parentElement: Element): Element | null => {
 
     const selector = "div[aria-label='Message Body'], div[aria-label='Message text'], div.editable";
-    return document.querySelector(selector);
-}
-
-const observeEmailBody = () => {
-    const element = getEmailBodyElement();
-    if (element) {
-        const observer = new MutationObserver(() => {
-            getEmailBodyText(element);
-        });
-        observer.observe(element, { childList: true, subtree: true });
-    }
+    return parentElement.querySelector(selector);
 };
 
 
-const inputListener = () => (e: Event) => {
-    const element = getEmailBodyElement();
-    if (element)
-        getEmailBodyText(element);
-    return;
+/*const observeEmailBody = (messageContainers : NodeListOf<Element>) => {
+    messageContainers.forEach(element => {
+        const emailBodyElement = getEmailBodyElement(element);
+
+        if (!emailBodyElement) return;
+
+        const observer = new MutationObserver(() => {
+            getEmailBodyText(emailBodyElement);
+        });
+        observer.observe(emailBodyElement, {childList: true, subtree: true});
+    })
+
+};*/
+
+const getAttachments = (element: Element): NodeListOf<Element> => {
+    const selector = "div[aria-label^='Attachment']";
+    return element.querySelectorAll(selector);
+}
+
+const inputListener = (element: Element) => (e: Event) => {
+
+    if (!element) return;
+
+    const emailBody = getEmailBodyElement(element);
+    if (!emailBody) return;
+
+    const emailText = getEmailBodyText(emailBody);
+    if (!emailText.includes("test")) return;
+
+    const attachments = getAttachments(element);
+    console.log(`Received ${attachments.length} attachments`);
+
 };
 
 
 const main = async () => {
-    observeEmailBody();
-    document.addEventListener("input", inputListener());
+
+    setupNewMessageObserver();
 };
 
 main();
