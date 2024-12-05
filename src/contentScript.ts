@@ -1,5 +1,8 @@
 console.log("Content script loaded!");
 
+// TODO: Bugfix detect load page state
+// TODO: clean up the code
+
 const htmlContent = `
         <div style="
             flex-grow: 0;
@@ -47,7 +50,7 @@ const setupNewMessageObserver = () => {
 
 const getEmailBodyText = (element: Element): string => {
 
-    let emailText = element.innerHTML;
+    let emailText = element.textContent ?? "";
     console.log("Email text : ", emailText);
     return emailText;
 }
@@ -86,6 +89,7 @@ const removeAttachmentWarning = (element: Element): void => {
     injectedElement?.remove();
 }
 
+
 const inputListener = (element: Element) => (e: Event) => {
 
     if (!element) return;
@@ -94,12 +98,18 @@ const inputListener = (element: Element) => (e: Event) => {
     if (!emailBody) return;
 
     const emailText = getEmailBodyText(emailBody);
+
+    if (!emailText.includes("test") && hasAttachmentWarning(element)){
+        removeAttachmentWarning(emailBody.parentElement  as Element);
+        return;
+    }
+
     if (!emailText.includes("test")) return;
 
     if (!hasAttachments(element)) {
-        addAttachmentWarning(emailBody);
+        addAttachmentWarning(emailBody.parentElement as Element);
     } else {
-        removeAttachmentWarning(emailBody);
+        removeAttachmentWarning(emailBody.parentElement  as Element);
     }
 };
 
