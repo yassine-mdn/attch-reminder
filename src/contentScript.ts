@@ -29,13 +29,13 @@ const setupNewMessageObserver = () => {
         mutations.forEach((mutation, mutationKey) => {
             mutation.addedNodes.forEach((node, key) => {
                 if (node instanceof Element) {
-                    const targetDiv = node.querySelector("div[aria-label='New Message']");
+                    const emailContainer = node.querySelector("div[aria-label='New Message']");
 
-                    if (targetDiv && !processedNodes.has(targetDiv)) {
-                        processedNodes.add(targetDiv);
+                    if (emailContainer && !processedNodes.has(emailContainer)) {
+                        processedNodes.add(emailContainer);
                         console.log(`Message Container Found! in node #${key} of mutation with key #${mutationKey}`);
 
-                        targetDiv.addEventListener("input", inputListener(targetDiv));
+                        emailContainer.addEventListener("input", inputListener(emailContainer));
                     }
                 }
             });
@@ -48,17 +48,17 @@ const setupNewMessageObserver = () => {
     });
 };
 
-const getEmailBodyText = (element: Element): string => {
+const getEmailBodyText = (emailBody: Element): string => {
 
-    let emailText = element.textContent ?? "";
+    let emailText = emailBody.textContent ?? "";
     console.log("Email text : ", emailText);
     return emailText;
 }
 
-const getEmailBodyElement = (parentElement: Element): Element | null => {
+const getEmailBodyElement = (emailContainer: Element): Element | null => {
 
     const selector = "div[aria-label='Message Body'], div[aria-label='Message text'], div.editable";
-    return parentElement.querySelector(selector);
+    return emailContainer.querySelector(selector);
 };
 
 
@@ -78,36 +78,35 @@ const hasAttachmentWarning = (element: Element) : boolean => {
     return element.contains(injectedElement)
 }
 
-const addAttachmentWarning = (element: Element): void => {
-    if(hasAttachmentWarning(element)) return;
-    element.insertAdjacentHTML('afterbegin', htmlContent);
+const addAttachmentWarning = (emailBody: Element): void => {
+    if(hasAttachmentWarning(emailBody)) return;
+    emailBody.insertAdjacentHTML('afterbegin', htmlContent);
 }
 
-const removeAttachmentWarning = (element: Element): void => {
-    if(!hasAttachmentWarning(element)) return;
+const removeAttachmentWarning = (emailBody: Element): void => {
+    if(!hasAttachmentWarning(emailBody)) return;
     const injectedElement = document.getElementById("attachment-missing-warning");
     injectedElement?.remove();
 }
 
+const inputListener = (emailContainer: Element) => (e: Event) => {
 
-const inputListener = (element: Element) => (e: Event) => {
+    if (!emailContainer) return;
 
-    if (!element) return;
-
-    const emailBody = getEmailBodyElement(element);
+    const emailBody = getEmailBodyElement(emailContainer);
     if (!emailBody) return;
 
     const emailText = getEmailBodyText(emailBody);
 
-    if (!emailText.includes("test") && hasAttachmentWarning(element)){
+    if (!emailText.includes("test") && hasAttachmentWarning(emailContainer)){
         removeAttachmentWarning(emailBody.parentElement  as Element);
         return;
     }
 
     if (!emailText.includes("test")) return;
 
-    if (!hasAttachments(element)) {
-        addAttachmentWarning(emailBody.parentElement as Element);
+    if (!hasAttachments(emailContainer)) {
+        addAttachmentWarning(emailBody.parentElement  as Element);
     } else {
         removeAttachmentWarning(emailBody.parentElement  as Element);
     }
