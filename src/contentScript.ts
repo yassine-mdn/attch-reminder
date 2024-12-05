@@ -1,5 +1,21 @@
 console.log("Content script loaded!");
 
+const htmlContent = `
+        <div style="
+            flex-grow: 0;
+            padding: 8px;
+            background-color: rgb(248, 233, 233);
+            position: relative;
+            color: rgb(189, 39, 30);
+            font-size: 1rem;
+            line-height: 1.4286rem; 
+            font-weight: 500;
+        "
+        id="attachment-missing-warning"
+        >
+            This is your styled text inside the div.
+        </div>
+    `;
 
 //still super slow (not really but still a O(n*m) complexity ain't cute)
 const setupNewMessageObserver = () => {
@@ -48,6 +64,28 @@ const getAttachments = (element: Element): NodeListOf<Element> => {
     return element.querySelectorAll(selector);
 }
 
+const hasAttachments = (element: Element): boolean => {
+    const selector = "div[aria-label^='Attachment']";
+    return element.querySelector(selector) !== null;
+}
+
+const hasAttachmentWarning = (element: Element) : boolean => {
+
+    const injectedElement = document.getElementById("attachment-missing-warning");
+    return element.contains(injectedElement)
+}
+
+const addAttachmentWarning = (element: Element): void => {
+    if(hasAttachmentWarning(element)) return;
+    element.insertAdjacentHTML('afterbegin', htmlContent);
+}
+
+const removeAttachmentWarning = (element: Element): void => {
+    if(!hasAttachmentWarning(element)) return;
+    const injectedElement = document.getElementById("attachment-missing-warning");
+    injectedElement?.remove();
+}
+
 const inputListener = (element: Element) => (e: Event) => {
 
     if (!element) return;
@@ -58,9 +96,11 @@ const inputListener = (element: Element) => (e: Event) => {
     const emailText = getEmailBodyText(emailBody);
     if (!emailText.includes("test")) return;
 
-    const attachments = getAttachments(element);
-    console.log(`Received ${attachments.length} attachments`);
-
+    if (!hasAttachments(element)) {
+        addAttachmentWarning(emailBody);
+    } else {
+        removeAttachmentWarning(emailBody);
+    }
 };
 
 
