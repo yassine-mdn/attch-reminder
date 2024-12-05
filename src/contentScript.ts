@@ -1,36 +1,23 @@
 console.log("Content script loaded!");
 
 
-/*let cachedContainers: NodeListOf<Element> | null = null;
-let lastCheckTime = 0;
-const CACHE_DURATION = 500;
-
-
-const getEmailContainerElements = (): NodeListOf<Element> => {
-    const currentTime = Date.now();
-
-    if (cachedContainers &&
-        (currentTime - lastCheckTime) < CACHE_DURATION) {
-        return cachedContainers;
-    }
-
-    const selector = "div[aria-label='New Message']";
-    cachedContainers = document.querySelectorAll(selector);
-    lastCheckTime = currentTime;
-
-    return cachedContainers;
-}*/
-
-
-//still super slow
+//still super slow (not really but still a O(n*m) complexity ain't cute)
 const setupNewMessageObserver = () => {
+
+    const processedNodes = new WeakSet();
+
     const observer = new MutationObserver((mutations) => {
-        mutations.forEach(mutation => {
-            mutation.addedNodes.forEach(node => {
-                if (node instanceof Element &&
-                    node.querySelector("div[aria-label='New Message']")) {
-                    console.log("Message Container Found!")
-                    document.addEventListener("input", inputListener(node));
+        mutations.forEach((mutation, mutationKey) => {
+            mutation.addedNodes.forEach((node, key) => {
+                if (node instanceof Element) {
+                    const targetDiv = node.querySelector("div[aria-label='New Message']");
+
+                    if (targetDiv && !processedNodes.has(targetDiv)) {
+                        processedNodes.add(targetDiv);
+                        console.log(`Message Container Found! in node #${key} of mutation with key #${mutationKey}`);
+
+                        targetDiv.addEventListener("input", inputListener(targetDiv));
+                    }
                 }
             });
         });
@@ -39,7 +26,6 @@ const setupNewMessageObserver = () => {
     observer.observe(document.body, {
         childList: true,
         subtree: true,
-        attributes: true,
     });
 };
 
@@ -56,20 +42,6 @@ const getEmailBodyElement = (parentElement: Element): Element | null => {
     return parentElement.querySelector(selector);
 };
 
-
-/*const observeEmailBody = (messageContainers : NodeListOf<Element>) => {
-    messageContainers.forEach(element => {
-        const emailBodyElement = getEmailBodyElement(element);
-
-        if (!emailBodyElement) return;
-
-        const observer = new MutationObserver(() => {
-            getEmailBodyText(emailBodyElement);
-        });
-        observer.observe(emailBodyElement, {childList: true, subtree: true});
-    })
-
-};*/
 
 const getAttachments = (element: Element): NodeListOf<Element> => {
     const selector = "div[aria-label^='Attachment']";
