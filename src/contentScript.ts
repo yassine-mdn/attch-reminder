@@ -1,8 +1,5 @@
 console.log("Content script loaded!");
 
-// TODO: Bugfix detect load page state
-// TODO: clean up the code
-
 const htmlContent = `
         <div style="
             flex-grow: 0;
@@ -19,6 +16,28 @@ const htmlContent = `
             This is your styled text inside the div.
         </div>
     `;
+
+
+const keywords =  [
+    // English
+    "attached",
+    "attachment",
+    "enclosed",
+    "included",
+
+    // French
+    "pièce jointe",
+    "pj",
+    "ci-joint",
+    "document joint",
+    "fichier joint",
+    "inclus",
+    "vous joins",
+];
+
+
+// TODO: Bugfix detect load page state
+// TODO: clean up the code
 
 //still super slow (not really but still a O(n*m) complexity ain't cute)
 const setupNewMessageObserver = () => {
@@ -89,6 +108,10 @@ const removeAttachmentWarning = (emailBody: Element): void => {
     injectedElement?.remove();
 }
 
+const includesKeywords = (emailText: string, keywords: string[]): boolean => {
+    return keywords.some(keyword => emailText.includes(keyword));
+}
+
 const inputListener = (emailContainer: Element) => (e: Event) => {
 
     if (!emailContainer) return;
@@ -98,12 +121,12 @@ const inputListener = (emailContainer: Element) => (e: Event) => {
 
     const emailText = getEmailBodyText(emailBody);
 
-    if (!emailText.includes("test") && hasAttachmentWarning(emailContainer)){
+    if (!includesKeywords(emailText,keywords) && hasAttachmentWarning(emailContainer)){
         removeAttachmentWarning(emailBody.parentElement  as Element);
         return;
     }
 
-    if (!emailText.includes("test")) return;
+    if (!includesKeywords(emailText,keywords)) return;
 
     if (!hasAttachments(emailContainer)) {
         addAttachmentWarning(emailBody.parentElement  as Element);
