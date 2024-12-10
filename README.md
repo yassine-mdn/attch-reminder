@@ -1,4 +1,4 @@
-## Attach Reminder
+# Attach Reminder
 
 **Attach Reminder** is a Chrome extension designed to ensure you never forget to attach files to your emails.
 
