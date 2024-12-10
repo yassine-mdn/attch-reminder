@@ -1,33 +1,35 @@
-# Attach Reminder
+## Attach Reminder
 
-A simple application to help you remember to attach files to your emails.
+**Attach Reminder** is a Chrome extension designed to ensure you never forget to attach files to your emails.
 
 ## Features
 
-- Automatically scans emails for attachment-related keywords.
-- Alerts you when you forget to attach a file.
-- Easy integration with your email client.
+- Detects attachment-related keywords in email drafts.
+- Prompts you when you forget to attach a file before sending an email.
+- Simple and lightweight extension.
 
 ## Installation
 
-1. Clone this repository:
-
+1. Clone this repository to your local machine:
+   
    git clone https://github.com/yassine-mdn/attch-reminder.git
 
-2. Navigate to the project directory:
-   cd attch-reminder
 
-3. Install the required dependencies:
-   pip install -r requirements.txt
+2. Open Google Chrome and navigate to chrome://extensions/.
 
-4. Run the application:
-   python main.py
+3. Enable Developer mode (toggle in the top right corner).
+
+4. Click Load unpacked and select the cloned repository folder.
+
+5. The extension will now be added to your browser.
 
 ## Usage
 
-- Open the application.
-- Connect your email client. 
-- Compose your emails as usual, and Attach Reminder will notify you if you forget to attach files.
+1. Open your email client (e.g., Gmail) in Chrome.
+
+2. Compose an email as usual.
+
+3. If attachment-related keywords (e.g., "attached", "attachment") are detected and no files are attached, the extension will remind you to attach files before sending the email.
 
 ## Contributing
 
