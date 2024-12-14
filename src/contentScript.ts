@@ -1,5 +1,3 @@
-console.log("Content script loaded!");
-
 const htmlContent = `
         <div style="
             flex-grow: 0;
@@ -13,7 +11,7 @@ const htmlContent = `
         "
         id="attachment-missing-warning"
         >
-            This is your styled text inside the div.
+            You may have forgotten to add an attachment
         </div>
     `;
 
@@ -45,15 +43,13 @@ const setupNewMessageObserver = () => {
     const processedNodes = new WeakSet();
 
     const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation, mutationKey) => {
-            mutation.addedNodes.forEach((node, key) => {
+        mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
                 if (node instanceof Element) {
                     const emailContainer = node.querySelector("div[aria-label='New Message']");
 
                     if (emailContainer && !processedNodes.has(emailContainer)) {
                         processedNodes.add(emailContainer);
-                        console.log(`Message Container Found! in node #${key} of mutation with key #${mutationKey}`);
-
                         emailContainer.addEventListener("input", inputListener(emailContainer));
                     }
                 }
@@ -70,7 +66,6 @@ const setupNewMessageObserver = () => {
 const getEmailBodyText = (emailBody: Element): string => {
 
     let emailText = emailBody.textContent ?? "";
-    console.log("Email text : ", emailText);
     return emailText;
 }
 
