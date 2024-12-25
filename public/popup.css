@@ -3,3 +3,49 @@ body{
     width: 25rem;
 }
 
+.numbered-textarea{
+    font-family: Inter, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+    color: rgb(52, 55, 65);
+    border: none;
+    box-shadow: rgba(32, 38, 47, 0.1) 0px 0px 0px 1px inset;
+    background-color: rgb(249, 251, 253);
+    background-repeat: no-repeat;
+    background-size: 0% 100%;
+    background-image: linear-gradient(to top, #f9fbfd, #f9fbfd 2px, transparent 2px, transparent 100%);
+    line-height: 1.5;
+    display: block;
+    block-size: auto;
+    padding: 12px;
+    border-radius: 6px;
+    max-inline-size: 100%;
+    inline-size: 100%;
+    box-sizing: border-box;
+    font-weight: 400;
+    resize: none;
+    min-height: 15rem;
+    transition: background-image 150ms ease-in, background-size 150ms ease-in, background-color 150ms ease-in;
+}
+
+.numbered-textarea:focus{
+    background-color: rgb(255, 255, 255);
+    background-size: 100% 100%;
+    background-image: linear-gradient(to top, #0077CC, #0077CC 2px, transparent 2px, transparent 100%);
+    outline: none;
+}
+
+.textarea-label{
+    font-size: 0.8571rem;
+    line-height: 1.1429rem;
+    color: rgb(105, 112, 125);
+    font-weight: 600;
+    word-break: break-word;
+    display: inline-block;
+    overflow-wrap: break-word !important;
+}
+
+.keyword-textarea-container{
+    display: flex;
+    flex-direction: column;
+    row-gap: 4px;
+}
