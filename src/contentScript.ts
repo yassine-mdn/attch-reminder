@@ -115,6 +115,15 @@ const includesKeywords = (emailText: string, keywords: string[]): boolean => {
     return keywords.some(keyword => emailText.includes(keyword));
 };
 
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        if( request.message === "update" ) {
+            keywords = getKeywords();
+        }
+    }
+);
+
+
 const main = async () => {
     keywords = getKeywords();
     setupNewMessageObserver();
