@@ -1,3 +1,5 @@
+import {getKeywords} from "./util";
+
 const htmlContent = `
     <div style="
         flex-grow: 0;
@@ -15,22 +17,7 @@ const htmlContent = `
     </div>
 `;
 
-const keywords = [
-    // English
-    "attached",
-    "attachment",
-    "enclosed",
-    "included",
-
-    // French
-    "pièce jointe",
-    "pj",
-    "ci-joint",
-    "document joint",
-    "fichier joint",
-    "inclus",
-    "vous joins",
-];
+let keywords : string[] = []
 
 const setupNewMessageObserver = () => {
 
@@ -128,8 +115,17 @@ const includesKeywords = (emailText: string, keywords: string[]): boolean => {
     return keywords.some(keyword => emailText.includes(keyword));
 };
 
-const main = async () => {
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        if( request.message === "update" ) {
+            keywords = getKeywords();
+        }
+    }
+);
 
+
+const main = async () => {
+    keywords = getKeywords();
     setupNewMessageObserver();
 };
 

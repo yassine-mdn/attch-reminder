@@ -4,6 +4,7 @@
   "description": "Click-Clack",
   "version": "1.0",
   "action": {
+    "default_popup": "popup.html"
   },
   "permissions": ["storage", "declarativeContent", "activeTab", "scripting"],
   "background": {
