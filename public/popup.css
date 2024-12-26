@@ -1,6 +1,6 @@
 body{
-    height: 25rem;
-    width: 25rem;
+    width: 20rem;
+    margin: 0;
 }
 
 button {
@@ -70,10 +70,36 @@ button:disabled {
     transition: background-image 150ms ease-in, background-size 150ms ease-in, background-color 150ms ease-in;
 }
 
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    border-bottom: 1px solid rgb(162, 171, 186);
+    background-color: white;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 40px;
+    margin-right: 8px;
+}
+
+
+.app-name {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
 .numbered-textarea:focus{
     background-color: rgb(255, 255, 255);
     background-size: 100% 100%;
-    background-image: linear-gradient(to top, #0077CC, #0077CC 2px, transparent 2px, transparent 100%);
+    background-image: linear-gradient(to top, #ff1863, #ff404b 2px, transparent 2px, transparent 100%);
     outline: none;
 }
 
@@ -97,4 +123,5 @@ button:disabled {
     display: flex;
     flex-direction: column;
     row-gap: 8px;
+    padding: 8px;
 }
