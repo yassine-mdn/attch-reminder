@@ -3,6 +3,49 @@ body{
     width: 25rem;
 }
 
+button {
+    font-family: Inter, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    border: none;
+    padding: 0px;
+    margin: 0px;
+    display: inline-block;
+    appearance: none;
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap;
+    max-inline-size: 100%;
+    vertical-align: middle;
+    font-weight: 500;
+    padding-block: 0px;
+    padding-inline: 12px;
+    block-size: 40px;
+    font-size: 1rem;
+    line-height: 1.4286rem;
+    border-radius: 6px;
+    min-inline-size: 112px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(255, 21, 101);
+    outline-color: rgb(0, 0, 0);
+}
+
+button:hover {
+    text-decoration: underline;
+    transform: translateY(-1px);
+}
+button:active {
+    transform: translateY(1px);
+}
+
+button:disabled {
+    cursor: not-allowed;
+    color: rgb(162, 171, 186);
+    background-color: rgba(211, 218, 230, 0.15);
+    &:hover {
+        text-decoration: none;
+        transform: none;
+    }
+}
+
 .numbered-textarea{
     font-family: Inter, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
     font-size: 1rem;
@@ -48,4 +91,10 @@ body{
     display: flex;
     flex-direction: column;
     row-gap: 4px;
+}
+
+.form-container{
+    display: flex;
+    flex-direction: column;
+    row-gap: 8px;
 }
